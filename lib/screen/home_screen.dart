@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kuliner_app/controller/kuliner_controller.dart';
 import 'package:kuliner_app/model/kuliner.dart';
+import 'package:kuliner_app/screen/detail_screen.dart';
 import 'package:kuliner_app/widget/kuliner_form.dart';
-
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -22,7 +22,6 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Wisata Kuliner Yogyakarta"),
@@ -43,11 +42,27 @@ class _HomeViewState extends State<HomeView> {
               itemCount: snapshot.data?.length ?? 0,
               itemBuilder: (context, index) {
                 Kuliner kuliner = snapshot.data![index];
-                return ListTile(
-                  title: Text(kuliner.nmTempat),
-                  subtitle: Text(kuliner.alamat),
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(kuliner.gambar),
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailScreen(
+                          kuliner: Kuliner(
+                            nmTempat: kuliner.nmTempat,
+                            alamat: kuliner.alamat,
+                            gambar: kuliner.gambar,
+                          )
+                        )
+                      )
+                    );
+                  },
+                  child: ListTile(
+                    title: Text(kuliner.nmTempat),
+                    subtitle: Text(kuliner.alamat),
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(kuliner.gambar),
+                    ),
                   ),
                 );
               },
@@ -57,10 +72,8 @@ class _HomeViewState extends State<HomeView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const KulinerForm())
-          );
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const KulinerForm()));
         },
         child: const Icon(Icons.add),
       ),

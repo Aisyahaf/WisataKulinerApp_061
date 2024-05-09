@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:kuliner_app/screen/home_screen.dart';
 
 void main() {
-  HttpOverrides.global = new MyHttpOverrides();
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
 }
 
