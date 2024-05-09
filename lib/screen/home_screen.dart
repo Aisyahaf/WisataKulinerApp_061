@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kuliner_app/controller/kuliner_controller.dart';
 import 'package:kuliner_app/model/kuliner.dart';
 import 'package:kuliner_app/screen/detail_screen.dart';
+import 'package:kuliner_app/widget/edit_form.dart';
 import 'package:kuliner_app/widget/kuliner_form.dart';
 
 class HomeView extends StatefulWidget {
@@ -18,6 +19,7 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
     _controller.getKuliner();
+
   }
 
   @override
@@ -45,23 +47,67 @@ class _HomeViewState extends State<HomeView> {
                 return InkWell(
                   onTap: () {
                     Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DetailScreen(
-                          kuliner: Kuliner(
-                            nmTempat: kuliner.nmTempat,
-                            alamat: kuliner.alamat,
-                            gambar: kuliner.gambar,
-                          )
-                        )
-                      )
-                    );
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DetailScreen(
+                                    kuliner: Kuliner(
+                                      id: kuliner.id,
+                                  nmTempat: kuliner.nmTempat,
+                                  alamat: kuliner.alamat,
+                                  gambar: kuliner.gambar,
+                                ))));
                   },
                   child: ListTile(
                     title: Text(kuliner.nmTempat),
                     subtitle: Text(kuliner.alamat),
                     leading: CircleAvatar(
                       backgroundImage: NetworkImage(kuliner.gambar),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EditForm(
+                                            kuliner: Kuliner(
+                                              id: kuliner.id,
+                                          nmTempat: kuliner.nmTempat,
+                                          alamat: kuliner.alamat,
+                                          gambar: kuliner.gambar,
+                                        ))));
+                          },
+                          icon: Icon(Icons.edit),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: ((context) {
+                                  return AlertDialog(
+                                    title: Text('Hapus Data ini??'),
+                                    actions: [
+                                      ElevatedButton(
+                                          onPressed: () async{
+                                            await _controller.deleteKuliner(kuliner.id! as String);
+                                              Navigator.of(context).pop();
+                                          },
+                                          child: Text('Hapus')),
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('Batal')),
+                                    ],
+                                  );
+                                }));
+                          },
+                          icon: Icon(Icons.delete),
+                        ),
+                      ],
                     ),
                   ),
                 );

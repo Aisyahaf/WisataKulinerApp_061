@@ -7,14 +7,15 @@ import 'package:kuliner_app/model/kuliner.dart';
 import 'package:kuliner_app/screen/home_screen.dart';
 import 'package:kuliner_app/screen/map_screen.dart';
 
-class KulinerForm extends StatefulWidget {
-  const KulinerForm({super.key});
+class EditForm extends StatefulWidget {
+  const EditForm({super.key, required this.kuliner});
+  final Kuliner kuliner;
 
   @override
-  State<KulinerForm> createState() => _KulinerFormState();
+  State<EditForm> createState() => _EditFormState();
 }
 
-class _KulinerFormState extends State<KulinerForm> {
+class _EditFormState extends State<EditForm> {
   final kulinerController = KulinerController();
   final _formKey = GlobalKey<FormState>();
   final _nmTempatController = TextEditingController();
@@ -22,8 +23,6 @@ class _KulinerFormState extends State<KulinerForm> {
   File? _image;
   final _imagePicker = ImagePicker();
   String? _alamat;
-  
-  get _id => null;
 
   Future<void> getImage() async {
     final XFile? pickedFile =
@@ -42,7 +41,7 @@ class _KulinerFormState extends State<KulinerForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Form Wisata Kuliner")),
+      appBar: AppBar(title: const Text("Edit Form Wisata Kuliner")),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -121,7 +120,7 @@ class _KulinerFormState extends State<KulinerForm> {
                         _formKey.currentState!.save();
                         var result = await kulinerController.addKuliner(
                             Kuliner(
-                              id: _id,
+                                id: widget.kuliner.id,
                                 nmTempat: _nmTempatController.text,
                                 alamat: _alamat ?? '',
                                 gambar: _image!.path),
@@ -140,7 +139,7 @@ class _KulinerFormState extends State<KulinerForm> {
                             (route) => false);
                       }
                     },
-                    child: const Text("Submit")),
+                    child: const Text("Update")),
               )
             ],
           ),
