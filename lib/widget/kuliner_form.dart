@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:kuliner_app/controller/kuliner_controller.dart';
 import 'package:kuliner_app/model/kuliner.dart';
 import 'package:kuliner_app/screen/home_screen.dart';
@@ -18,26 +17,10 @@ class _KulinerFormState extends State<KulinerForm> {
   final kulinerController = KulinerController();
   final _formKey = GlobalKey<FormState>();
   final _nmTempatController = TextEditingController();
+  final _menuController = TextEditingController();
+  final _noteController = TextEditingController();
 
-  File? _image;
-  final _imagePicker = ImagePicker();
   String? _alamat;
-  
-  get _id => null;
-
-  Future<void> getImage() async {
-    final XFile? pickedFile =
-        await _imagePicker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        // ignore: avoid_print
-        print("No Image Selected");
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,16 +33,79 @@ class _KulinerFormState extends State<KulinerForm> {
             children: [
               Container(
                 margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.purple.shade50,
+                  border: Border.all(color: Colors.deepPurple),
+                  borderRadius: BorderRadius.circular(5),
+                ),
                 child: TextFormField(
                   decoration: const InputDecoration(
-                      labelText: "Tempat Wisata",
-                      hintText: "Masukkan nama tempat"),
+                    labelText: "Tempat Wisata",
+                    hintText: "Masukkan nama tempat",
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  ),
                   controller: _nmTempatController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'please enter the name of the tourist spot';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.purple.shade50,
+                  border: Border.all(color: Colors.deepPurple),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: "Rekomendasi Menu Makanan",
+                    hintText: "Masukkan menu makanan",
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  ),
+                  controller: _menuController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a menu recommendation';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.purple.shade50,
+                  border: Border.all(color: Colors.deepPurple),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: "Catatan",
+                    hintText: "Masukkan catatanmu",
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  ),
+                  controller: _noteController,
                 ),
               ),
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.purple.shade50,
+                  border: Border.all(color: Colors.deepPurple),
+                  borderRadius: BorderRadius.circular(5),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -106,13 +152,6 @@ class _KulinerFormState extends State<KulinerForm> {
                   ],
                 ),
               ),
-              _image == null
-                  ? const Text("Tidak ada gambar yang dipilih")
-                  : Image.file(_image!),
-              ElevatedButton(
-                onPressed: getImage,
-                child: const Text("Pilih Gambar"),
-              ),
               Container(
                 margin: const EdgeInsets.all(10),
                 child: ElevatedButton(
@@ -120,12 +159,14 @@ class _KulinerFormState extends State<KulinerForm> {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
                         var result = await kulinerController.addKuliner(
-                            Kuliner(
-                              id: _id,
-                                nmTempat: _nmTempatController.text,
-                                alamat: _alamat ?? '',
-                                gambar: _image!.path),
-                            _image);
+                          Kuliner(
+                            id: "",
+                            nmTempat: _nmTempatController.text,
+                            menu: _menuController.text,
+                            note: _noteController.text,
+                            alamat: _alamat ?? '',
+                          ),
+                        );
 
                         // ignore: use_build_context_synchronously
                         ScaffoldMessenger.of(context).showSnackBar(

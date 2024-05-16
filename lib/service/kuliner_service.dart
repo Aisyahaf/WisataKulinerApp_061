@@ -11,7 +11,7 @@ class KulinerService {
     return Uri.parse("$baseUrl$path");
   }
 
-  Future<http.Response> addKuliner(Map<String, String> data, File? file) async {
+  Future<http.Response> addKuliner(Map<String, String> data,) async {
   var request = http.MultipartRequest(
     'POST',
     getUri(endpoint),
@@ -19,13 +19,10 @@ class KulinerService {
     ..fields.addAll(data)
     ..headers['Content-Type'] = 'multipart/form-data';
 
-  if (file != null) {
-    request.files.add(await http.MultipartFile.fromPath('gambar', file.path));
-  }
   return await http.Response.fromStream(await request.send());
 }
 
-  Future<List<dynamic>> fetchKuliner() async {
+  Future<List<dynamic>> getKuliner() async {
     var response = await http.get(
       getUri(endpoint),
       headers: {
@@ -42,17 +39,13 @@ class KulinerService {
     }
   }
 
-  Future<http.Response> editKuliner(Map<String, String> data, File? file, String id) async {
+  Future<http.Response> editKuliner(Map<String, String> data, String id) async {
   var request = http.MultipartRequest(
     'PUT',
     getUri('$endpoint/$id'),
   )
     ..fields.addAll(data)
     ..headers['Content-Type'] = 'multipart/form-data';
-
-  if (file != null) {
-    request.files.add(await http.MultipartFile.fromPath('gambar', file.path));
-  }
 
   return await http.Response.fromStream(await request.send());
 }

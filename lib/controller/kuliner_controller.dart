@@ -8,14 +8,16 @@ import 'package:kuliner_app/service/kuliner_service.dart';
 class KulinerController {
   final KulinerService _service = KulinerService();
 
-  Future<Map<String, dynamic>> addKuliner(Kuliner kuliner, File? file) async {
+  Future<Map<String, dynamic>> addKuliner(Kuliner kuliner) async {
     Map<String, String> data = {
+      'id': kuliner.id.toString(),
       'nmTempat': kuliner.nmTempat,
+      'menu': kuliner.menu,
       'alamat': kuliner.alamat,
     };
 
     try {
-      var response = await _service.addKuliner(data, file);
+      var response = await _service.addKuliner(data);
 
       if (response.statusCode == 201) {
         return {
@@ -45,9 +47,14 @@ class KulinerController {
 
   Future<List<Kuliner>> getKuliner() async {
     try {
-      List<dynamic> kulinerData = await _service.fetchKuliner();
-      List<Kuliner> kuliner =
-          kulinerData.map((json) => Kuliner.fromMap(json)).toList();
+      List<dynamic> kulinerData = await _service.getKuliner();
+      // List<Kuliner> kuliner =
+      //     kulinerData.map((json) => Kuliner.fromMap(json)).toList();
+      // return kuliner;
+      List<Kuliner> kuliner = kulinerData.map((json) {
+        json['id'] = json['id'].toString();
+        return Kuliner.fromMap(json);
+      }).toList();
       return kuliner;
     } catch (e) {
       // ignore: avoid_print
@@ -57,15 +64,16 @@ class KulinerController {
     }
   }
 
-  Future<Map<String, dynamic>> editKuliner(
-      Kuliner kuliner, File? file, String id) async {
+  Future<Map<String, dynamic>> editKuliner(Kuliner kuliner, String id) async {
     Map<String, String> data = {
+      'id': kuliner.id.toString(),
       'nmTempat': kuliner.nmTempat,
+      'menu': kuliner.menu,
       'alamat': kuliner.alamat,
     };
 
     try {
-      var response = await _service.editKuliner(data, file, id);
+      var response = await _service.editKuliner(data, id);
 
       if (response.statusCode == 200) {
         return {

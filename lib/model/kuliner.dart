@@ -2,29 +2,33 @@
 import 'dart:convert';
 
 class Kuliner {
-  int? id;
+  final String id;
   final String nmTempat;
+  final String menu;
+  final String note;
   final String alamat;
-  final String gambar;
 
   Kuliner({
     required this.id,
     required this.nmTempat,
+    required this.menu,
+    required this.note,
     required this.alamat,
-    required this.gambar,
   });
 
   Kuliner copyWith({
-    int? id,
+    String? id,
     String? nmTempat,
+    String? menu,
+    String? note,
     String? alamat,
-    String? gambar,
   }) {
     return Kuliner(
       id: id ?? this.id,
       nmTempat: nmTempat ?? this.nmTempat,
+      menu: menu ?? this.menu,
+      note: note ?? this.note,
       alamat: alamat ?? this.alamat,
-      gambar: gambar ?? this.gambar,
     );
   }
 
@@ -32,17 +36,19 @@ class Kuliner {
     return <String, dynamic>{
       'id': id,
       'nmTempat': nmTempat,
+      'menu': menu,
+      'note': note,
       'alamat': alamat,
-      'gambar': gambar,
     };
   }
 
   factory Kuliner.fromMap(Map<String, dynamic> map) {
     return Kuliner(
-      id: map['id'] != null ? map['id'] as int : null,
+      id: map['id'] as String,
       nmTempat: map['nmTempat'] as String,
+      menu: map['menu'] as String,
+      note: map['note'] as String,
       alamat: map['alamat'] as String,
-      gambar: map['gambar'] as String,
     );
   }
 
@@ -53,7 +59,7 @@ class Kuliner {
 
   @override
   String toString() {
-    return 'Kuliner(id: $id, nmTempat: $nmTempat, alamat: $alamat, gambar: $gambar)';
+    return 'Kuliner(id: $id, nmTempat: $nmTempat, menu: $menu, note: $note, alamat: $alamat)';
   }
 
   @override
@@ -63,15 +69,17 @@ class Kuliner {
     return 
       other.id == id &&
       other.nmTempat == nmTempat &&
-      other.alamat == alamat &&
-      other.gambar == gambar;
+      other.menu == menu &&
+      other.note == note &&
+      other.alamat == alamat;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
       nmTempat.hashCode ^
-      alamat.hashCode ^
-      gambar.hashCode;
+      menu.hashCode ^
+      note.hashCode ^
+      alamat.hashCode;
   }
 }
